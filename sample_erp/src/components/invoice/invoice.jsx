@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import App from '../../App';
+import './invoice.css';
 
 export default function InvoiceManager() {
   const [invoices, setInvoices] = useState([]);
@@ -134,17 +135,17 @@ export default function InvoiceManager() {
 
         <h3>Items</h3>
         {items.map((item, idx) => (
-          <div key={idx} style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+          <div key={idx} className='formBox'>
             <input type="text" placeholder="Description" value={item.description} onChange={e => handleItemChange(idx, 'description', e.target.value)} required style={{ flex: 2 }} />
             <input type="number" placeholder="Qty" value={item.quantity} onChange={e => handleItemChange(idx, 'quantity', parseInt(e.target.value) || 0)} style={{ width: '70px' }} />
             <input type="number" placeholder="Price" value={item.price} onChange={e => handleItemChange(idx, 'price', parseFloat(e.target.value) || 0)} style={{ width: '100px' }} />
-            <span>Total: ${(item.quantity * item.price).toFixed(2)}</span>
+            <span>Total: {(item.quantity * item.price).toFixed(2)}</span>
           </div>
         ))}
         <button type="button" onClick={() => setItems([...items, { description: '', quantity: 1, price: 0 }])}>+ Add Item</button>
-
-        <h3>3. Payment Registration</h3>
-        <div style={{ display: 'flex', gap: '15px', marginBottom: '15px' }}>
+        <br></br>
+        <h3>Payment Registration</h3><br></br>
+        <div className='paymentBox'>
           <label>Amount Paid Now: 
             <input type="number" step="0.01" value={amountPaid} onChange={e => setAmountPaid(parseFloat(e.target.value) || 0)} />
           </label>
@@ -170,7 +171,7 @@ export default function InvoiceManager() {
 
       {/* FILTER CONTROL PANEL */}
       <h2 style={{ marginTop: '40px' }}>Invoice Records & History</h2>
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', background: '#e9ecef', padding: '15px', borderRadius: '6px' }}>
+      <div className='filterBox' style={{ display: 'flex', gap: '10px', marginBottom: '20px', background: '#e9ecef', padding: '15px', borderRadius: '6px' }}>
         <input type="text" placeholder="Search ID or Customer..." value={filters.search} onChange={e => setFilters({...filters, search: e.target.value})} />
         <select value={filters.status} onChange={e => setFilters({...filters, status: e.target.value})}>
           <option value="">All Statuses</option>
@@ -184,8 +185,8 @@ export default function InvoiceManager() {
 
       {/* DATA TABLE */}
       <table style={{ width: '100%', borderCollapse: 'collapse' }} border="1" cellPadding="10">
-        <thead>
-          <tr style={{ background: '#343a40', color: '#fff' }}>
+        <thead style={{padding:'10px'}}>
+          <tr style={{ background: '#343a40', color: '#fff',padding:'10px' }}>
             <th>Invoice ID</th>
             <th>Customer</th>
             <th>Date</th>
@@ -199,7 +200,7 @@ export default function InvoiceManager() {
           {(Array.isArray(invoices) ? invoices : []).map(inv => (
             <tr key={inv.id}
             onClick={() => handleRowClick(inv)} 
-            style={{ cursor: 'pointer', transition: 'background 0.2s' }}
+            style={{ cursor: 'pointer', transition: 'background 0.2s',padding:'10px' }}
             onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f1f3f5'}
             onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}>
               <td>{inv.inv_id}</td>

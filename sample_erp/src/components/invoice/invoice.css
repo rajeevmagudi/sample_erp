@@ -1,0 +1,24 @@
+.formBox{
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    gap: 20;
+}
+.formBox input{
+    padding: 8px;
+    margin: 5px;
+}
+.paymentBox{ 
+    display: flex; 
+    gap: 15px;
+    margin-top: 5px;
+ }
+ .paymentBox label{
+    margin-right: 5px ;
+ }
+ .paymentBox input,select{
+    padding: 5px;
+ }
+ .filterBox input,select{
+    padding: 5px;
+ }

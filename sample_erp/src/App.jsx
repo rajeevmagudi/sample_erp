@@ -4,6 +4,7 @@ import Customer from './components/customer/customer';
 import InvoiceManager from './components/invoice/invoice';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Sidebar from './components/navBars/sideBar';
+import Payment from './components/payments/payment';
 
 
 function App() {
@@ -27,8 +28,8 @@ function App() {
             <Route path="/" element={<Navigate to="/customers" replace />} />
             <Route path="/customers" element={<Customer />} />
             <Route path="/invoices" element={<InvoiceManager />} />
-            {/* <Route path="/accounts" element={<Accounts />} />
-            <Route path="/payments" element={<Payments />} /> */}
+            {/* {/* <Route path="/accounts" element={<Accounts />} /> */}
+            <Route path="/payments" element={<Payment />} /> 
           </Routes>
         </main>
       </div>

@@ -6,8 +6,8 @@ const Sidebar = () => {
   const menuItems = [
     { name: 'Customers', path: '/customers', icon: '👤' },
     { name: 'Invoices', path: '/invoices', icon: '📄' },
-    { name: 'Accounts', path: '/accounts', icon: '💼' },
     { name: 'Payments', path: '/payments', icon: '💳' },
+    { name: 'Accounts', path: '/accounts', icon: '💼' },
   ];
 
   return (
