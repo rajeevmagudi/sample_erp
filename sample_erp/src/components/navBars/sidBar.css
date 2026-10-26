@@ -1,0 +1,51 @@
+.sidebar {
+  width: 260px;
+  height: 100%;
+  background-color: #1e1e2f;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  font-family: sans-serif;
+}
+
+.sidebar-logo {
+  padding: 24px;
+  text-align: center;
+  border-bottom: 1px solid #2d2d44;
+}
+
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 0;
+  gap: 8px;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  padding: 14px 24px;
+  color: #b3b3c6;
+  text-decoration: none;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  border-left: 4px solid transparent;
+}
+
+.sidebar-link:hover {
+  background-color: #2d2d44;
+  color: #ffffff;
+}
+
+/* Active class applied by React Router NavLink */
+.sidebar-link.active {
+  background-color: #252538;
+  color: #ffffff;
+  border-left-color: #6200ee;
+  font-weight: bold;
+}
+
+.sidebar-icon {
+  margin-right: 16px;
+  font-size: 18px;
+}

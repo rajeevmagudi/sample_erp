@@ -41,6 +41,7 @@ export default function InvoiceManager() {
   const total = subtotal + taxAmount;
   const balanceAmount = total - amountPaid;
 
+
   // Fetch invoices with active filters
   const fetchInvoices = async () => {
     const queryParams = new URLSearchParams(filters).toString();
@@ -52,6 +53,26 @@ export default function InvoiceManager() {
       console.error("Error fetching invoices", err);
     }
   };
+
+  // handle items
+
+  const [selectedInvoice, setSelectedInvoice] = useState(null);
+  const [activeItems, setActiveItems] = useState([]);
+
+    const handleRowClick = async (invoice) => {
+    setSelectedInvoice(invoice);
+    setActiveItems([]); 
+    
+    try {
+        const res = await fetch(`http://localhost:3000/api/invoice/${invoice.id}`);
+        if (res.ok) {
+        const data = await res.json();
+        setActiveItems(data);
+        }
+    } catch (err) {
+        console.error("Error loading items for modal:", err);
+    }
+    };
 
   useEffect(() => {
     fetchInvoices();
@@ -176,7 +197,11 @@ export default function InvoiceManager() {
         </thead>
         <tbody>
           {(Array.isArray(invoices) ? invoices : []).map(inv => (
-            <tr key={inv.id}>
+            <tr key={inv.id}
+            onClick={() => handleRowClick(inv)} 
+            style={{ cursor: 'pointer', transition: 'background 0.2s' }}
+            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f1f3f5'}
+            onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}>
               <td>{inv.inv_id}</td>
               <td>{inv.customer_name}</td>
               <td>{new Date(inv.inv_date).toLocaleDateString()}</td>
@@ -188,6 +213,61 @@ export default function InvoiceManager() {
           ))}
         </tbody>
       </table>
+
+      {/* POPUP MODAL OVERLAY */}
+        {selectedInvoice && (
+        <div style={{
+            position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
+            backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000
+        }}>
+            <div style={{
+            background: '#fff', padding: '25px', borderRadius: '8px', maxWidth: '600px', width: '100%', boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
+            }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #eee', paddingBottom: '10px' }}>
+                <h3>Details for {selectedInvoice.inv_id}</h3>
+                <button onClick={() => setSelectedInvoice(null)} style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', fontWeight: 'bold' }}>&times;</button>
+            </div>
+
+            <div style={{ marginTop: '15px', display: 'flex', justifyContent: 'space-between' }}>
+                <p><strong>Customer:</strong> {selectedInvoice.customer_name}</p>
+                <p><strong>Date:</strong> {new Date(selectedInvoice.inv_date).toLocaleDateString()}</p>
+            </div>
+
+            <h4 style={{ marginTop: '20px', marginBottom: '10px' }}>Items List</h4>
+            <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '15px' }} border="1" cellPadding="8">
+                <thead>
+                <tr style={{ background: '#f8f9fa' }}>
+                    <th style={{ textAlign: 'left' }}>Description</th>
+                    <th style={{ textAlign: 'center' }}>Qty</th>
+                    <th style={{ textAlign: 'right' }}>Price</th>
+                    <th style={{ textAlign: 'right' }}>Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                {activeItems.length === 0 ? (
+                    <tr><td colSpan="4" style={{ textAlign: 'center', color: '#999' }}>Loading items...</td></tr>
+                ) : (
+                    activeItems.map(item => (
+                    <tr key={item.id}>
+                        <td>{item.description}</td>
+                        <td style={{ textAlign: 'center' }}>{item.quantity}</td>
+                        <td style={{ textAlign: 'right' }}>₹{parseFloat(item.price).toFixed(2)}</td>
+                        <td style={{ textAlign: 'right' }}>₹{parseFloat(item.amount).toFixed(2)}</td>
+                    </tr>
+                    ))
+                )}
+                </tbody>
+            </table>
+
+            <div style={{ textAlign: 'right', borderTop: '1px solid #eee', paddingTop: '15px' }}>
+                <p><strong>Grand Total:</strong> ₹{parseFloat(selectedInvoice.total).toFixed(2)}</p>
+                <p style={{ color: 'green' }}><strong>Amount Paid:</strong> ₹{parseFloat(selectedInvoice.paid_amount).toFixed(2)}</p>
+                <p style={{ color: 'red' }}><strong>Balance Due:</strong> ₹{parseFloat(selectedInvoice.balance_amount).toFixed(2)}</p>
+            </div>
+            </div>
+        </div>
+        )}
+
     </div>
   );
 }
